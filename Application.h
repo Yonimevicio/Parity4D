@@ -10,7 +10,7 @@ class ModuleTextures;
 class ModuleInput;
 class ModuleRenderExercise;
 class ModuleProgram;
-
+class ModuleCamera;
 class Application
 {
 public:
@@ -21,17 +21,18 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
-
+	float GetDeltaTime();
 public:
 	ModuleRender* renderer = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleRenderExercise* renderer_ex = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
-
+	ModuleCamera* camera = nullptr;
 
 private:
-
+	float delta_time = 0.0f;
+	unsigned previous_time = 0;
 	std::list<Module*> modules;
 
 };
