@@ -136,6 +136,25 @@
     <ClCompile Include="ModuleProgram.cpp" />
     <ClCompile Include="ModuleRenderExercise.cpp" />
     <ClCompile Include="ModuleCamera.cpp" />
+    <ClCompile Include="IMGUI\imgui.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_demo.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_draw.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_widgets.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_impl_opengl3.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_impl_sdl.cpp">
+      <Filter>IMGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -375,6 +394,31 @@
     <ClInclude Include="ModuleProgram.h" />
     <ClInclude Include="ModuleRenderExercise.h" />
     <ClInclude Include="ModuleCamera.h" />
+    <ClInclude Include="IMGUI\imconfig.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui_internal.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imstb_rectpack.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imstb_textedit.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imstb_truetype.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui_impl_sdl.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui_impl_opengl3.h">
+      <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -382,6 +426,9 @@
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{480ab997-78e7-494d-a4e2-c72c2697ff22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IMGUI">
+      <UniqueIdentifier>{46018844-b673-47e1-8dd4-dbabf55130b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
