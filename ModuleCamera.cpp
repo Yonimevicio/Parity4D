@@ -4,15 +4,17 @@
 #include "ModuleInput.h"
 #include "GL/glew.h"
 #include "MathGeoLib/Math/float3x3.h"
+#include "MathGeoLib/Geometry/Frustum.h"
 
 ModuleCamera::ModuleCamera()
-{
+{ 
+    float4x4 proj = frustum.ProjectionMatrix();
     frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-    frustum.SetViewPlaneDistances(0.1f, 200.0f);
-    frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * 90.0f, 1.3f);
+    frustum.SetViewPlaneDistances(0.1f, 100.0f);
+    frustum.SetHorizontalFovAndAspectRatio((float)DEGTORAD * 90.0f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
 
-    frustum.SetPos(float3(0, 1, -2));
-    frustum.SetFront(float3::unitZ);
+    frustum.SetPos(float3(0, 4, 10));
+    frustum.SetFront(-float3::unitZ);
     frustum.SetUp(float3::unitY);
 }
 
@@ -92,17 +94,7 @@ update_status ModuleCamera::PreUpdate()
         Rotate(float3x3::RotateY(-rotation_speed * DEGTORAD * delta_time));
     }
 
-    float4x4 projectionGL = GetProjectionMatrix();
 
-    // Send the frustum projection matrix to OpenGL
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(*projectionGL.v);
-
-    float4x4 viewGL = GetViewMatrix();
-
-    // Send the frustum view matrix to OpenGL
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(*viewGL.v);
 
     return UPDATE_CONTINUE;
 }
@@ -176,10 +168,10 @@ void ModuleCamera::LookAt(float x, float y, float z)
 
 float4x4 ModuleCamera::GetProjectionMatrix()
 {
-    return frustum.ProjectionMatrix().Transposed();
+    return frustum.ProjectionMatrix();
 }
 
 float4x4 ModuleCamera::GetViewMatrix()
 {
-    return float4x4(frustum.ViewMatrix()).Transposed();
+    return float4x4(frustum.ViewMatrix());
 }

@@ -7,6 +7,8 @@
 #include "ModuleRenderExercise.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
+#include "ModuleDebugDraw.h"
+#include "ModuleTexture.h"
 using namespace std;
 
 Application::Application()
@@ -19,6 +21,8 @@ Application::Application()
 	//modules.push_back(renderer = new ModuleRender()); // direct mode
 	modules.push_back(renderer_ex = new ModuleRenderExercise());
 	modules.push_back(program = new ModuleProgram());
+	modules.push_back(debdraw = new ModuleDebugDraw());
+	modules.push_back(texture = new ModuleTexture());
 	
 	
 }

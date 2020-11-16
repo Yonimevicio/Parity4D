@@ -4,6 +4,10 @@
 #include "ModuleWindow.h"
 #include "GL/glew.h"
 #include "SDL.h"
+#include "MathGeoLib/Math/float4x4.h"
+#include "ModuleDebugDraw.h"
+#include "ModuleCamera.h"
+#include "Globals.h"
 static void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	const char* tmp_source = "", * tmp_type = "", * tmp_severity = "";
@@ -50,6 +54,7 @@ static unsigned CreateTriangleVBO()
 
 	return vbo;
 }
+
 bool ModuleRenderExercise::Init()
 {
 	LOG("Creating Renderer context");
@@ -83,12 +88,24 @@ bool ModuleRenderExercise::Init()
 	return true;
 }
 void RenderVBO(unsigned vbo, unsigned program) {
+
+	float4x4 model = float4x4::identity;
+	float4x4 view = App->camera->GetViewMatrix();
+	float4x4 proj = App->camera->GetProjectionMatrix();
+
+	App->debdraw->Draw(view, proj, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glEnableVertexAttribArray(0);
 	// size = 3 float per vertex    
 	// stride = 0 is equivalent to stride = sizeof(float)*3
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glUseProgram(program);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"),  1, GL_TRUE, &view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"),  1, GL_TRUE, &proj[0][0]);
+
 	// 1 triangle to draw = 3 vertices 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }

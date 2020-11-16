@@ -156,6 +156,9 @@
     </ClCompile>
     <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ModuleTexture.cpp" />
+    <ClCompile Include="ModuleDebugDraw.cpp">
+      <Filter>DebugDraw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -421,6 +424,15 @@
     </ClInclude>
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleTexture.h" />
+    <ClInclude Include="debugdraw.h">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleDebugDraw.h">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_draw.hpp">
+      <Filter>DebugDraw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -431,6 +443,9 @@
     </Filter>
     <Filter Include="IMGUI">
       <UniqueIdentifier>{46018844-b673-47e1-8dd4-dbabf55130b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugDraw">
+      <UniqueIdentifier>{7c1d0bcd-9a2a-472c-89da-3864ff7aed43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
