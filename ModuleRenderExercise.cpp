@@ -7,34 +7,35 @@
 #include "MathGeoLib/Math/float4x4.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleCamera.h"
+#include "ModuleTexture.h"
 #include "Globals.h"
 static void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	const char* tmp_source = "", * tmp_type = "", * tmp_severity = "";
 	switch (source) {
-		case GL_DEBUG_SOURCE_API: tmp_source = "API"; break;
-		case GL_DEBUG_SOURCE_WINDOW_SYSTEM: tmp_source = "Window System"; break;
-		case GL_DEBUG_SOURCE_SHADER_COMPILER: tmp_source = "Shader Compiler"; break;
-		case GL_DEBUG_SOURCE_THIRD_PARTY: tmp_source = "Third Party"; break;
-		case GL_DEBUG_SOURCE_APPLICATION: tmp_source = "Application"; break;
-		case GL_DEBUG_SOURCE_OTHER: tmp_source = "Other"; break;
+	case GL_DEBUG_SOURCE_API: tmp_source = "API"; break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM: tmp_source = "Window System"; break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER: tmp_source = "Shader Compiler"; break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY: tmp_source = "Third Party"; break;
+	case GL_DEBUG_SOURCE_APPLICATION: tmp_source = "Application"; break;
+	case GL_DEBUG_SOURCE_OTHER: tmp_source = "Other"; break;
 	};
 	switch (type) {
-		case GL_DEBUG_TYPE_ERROR: tmp_type = "Error"; break;
-		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: tmp_type = "Deprecated Behaviour"; break;
-		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: tmp_type = "Undefined Behaviour"; break;
-		case GL_DEBUG_TYPE_PORTABILITY: tmp_type = "Portability"; break;
-		case GL_DEBUG_TYPE_PERFORMANCE: tmp_type = "Performance"; break;
-		case GL_DEBUG_TYPE_MARKER: tmp_type = "Marker"; break;
-		case GL_DEBUG_TYPE_PUSH_GROUP: tmp_type = "Push Group"; break;
-		case GL_DEBUG_TYPE_POP_GROUP: tmp_type = "Pop Group"; break;
-		case GL_DEBUG_TYPE_OTHER: tmp_type = "Other"; break;
+	case GL_DEBUG_TYPE_ERROR: tmp_type = "Error"; break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: tmp_type = "Deprecated Behaviour"; break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: tmp_type = "Undefined Behaviour"; break;
+	case GL_DEBUG_TYPE_PORTABILITY: tmp_type = "Portability"; break;
+	case GL_DEBUG_TYPE_PERFORMANCE: tmp_type = "Performance"; break;
+	case GL_DEBUG_TYPE_MARKER: tmp_type = "Marker"; break;
+	case GL_DEBUG_TYPE_PUSH_GROUP: tmp_type = "Push Group"; break;
+	case GL_DEBUG_TYPE_POP_GROUP: tmp_type = "Pop Group"; break;
+	case GL_DEBUG_TYPE_OTHER: tmp_type = "Other"; break;
 	};
 	switch (severity) {
-		case GL_DEBUG_SEVERITY_HIGH: tmp_severity = "high"; break;
-		case GL_DEBUG_SEVERITY_MEDIUM: tmp_severity = "medium"; break;
-		case GL_DEBUG_SEVERITY_LOW: tmp_severity = "low"; break;
-		case GL_DEBUG_SEVERITY_NOTIFICATION: tmp_severity = "notification"; break;
+	case GL_DEBUG_SEVERITY_HIGH: tmp_severity = "high"; break;
+	case GL_DEBUG_SEVERITY_MEDIUM: tmp_severity = "medium"; break;
+	case GL_DEBUG_SEVERITY_LOW: tmp_severity = "low"; break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION: tmp_severity = "notification"; break;
 	};
 	LOG("<Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>\n", tmp_source, tmp_type, tmp_severity, id, message);
 }
@@ -46,13 +47,37 @@ ModuleRenderExercise::~ModuleRenderExercise()
 }
 static unsigned CreateTriangleVBO()
 {
-	float vtx_data[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
+	float vtx_data[] = { 
+		-1.0f, -1.0f, 0.0f,	// <- v0 pos  
+		0.0f, 0.0f,         // <- v0 texcoord
+
+		1.0f, -1.0f, 0.0f,	// <- v1 pos  
+		1.0f, 0.0f,         // <- v1 texcoord
+
+		-1.0f,  1.0f, 0.0f,	// <- v2 pos  
+		0.0f, 1.0f,         // <- v2 texcoord
+
+		-1.0f,  1.0f, 0.0f,	// <- v2 pos  
+		0.0f, 1.0f,         // <- v2 texcoord
+
+		1.0f, -1.0f, 0.0f,	// <- v1 pos  
+		1.0f, 0.0f,         // <- v1 texcoord 
+
+		1.0f, 1.0f, 0.0f,	// <- v3 pos  
+		1.0f, 1.0f          // <- v3 texcoord
+
+	};
 	unsigned vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW);
 
 	return vbo;
+}
+
+bool ModuleRenderExercise::Start() {
+	lenna = App->texture->LoadTexture("Media/lenna.png");
+	return true;
 }
 
 bool ModuleRenderExercise::Init()
@@ -75,6 +100,7 @@ bool ModuleRenderExercise::Init()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
+	glEnable(GL_TEXTURE_2D);
 
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
@@ -84,10 +110,10 @@ bool ModuleRenderExercise::Init()
 #endif
 
 	triangle = CreateTriangleVBO();
-
 	return true;
 }
-void RenderVBO(unsigned vbo, unsigned program) {
+
+void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program) {
 
 	float4x4 model = float4x4::identity;
 	float4x4 view = App->camera->GetViewMatrix();
@@ -99,16 +125,23 @@ void RenderVBO(unsigned vbo, unsigned program) {
 	glEnableVertexAttribArray(0);
 	// size = 3 float per vertex    
 	// stride = 0 is equivalent to stride = sizeof(float)*3
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
 	glUseProgram(program);
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"),  1, GL_TRUE, &view[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"),  1, GL_TRUE, &proj[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &proj[0][0]);
 
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, lenna);
+	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 	// 1 triangle to draw = 3 vertices 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
+
 update_status ModuleRenderExercise::PreUpdate()
 {
 	GLsizei screen_width, screen_height;

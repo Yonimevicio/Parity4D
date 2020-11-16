@@ -10,7 +10,7 @@ ModuleTexture::~ModuleTexture()
 {
 }
 
-unsigned int ModuleTexture::LoadTexture(std::string path) {
+unsigned int ModuleTexture::LoadTexture(const std::string path) {
 
 	if (textureMap[path] != NULL) return textureMap[path];
 
@@ -30,7 +30,6 @@ unsigned int ModuleTexture::LoadTexture(std::string path) {
 		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
 	}
 	else return false;
-	
 
 	return texture_id;
 }
@@ -39,7 +38,6 @@ bool ModuleTexture::Init()
 	ilInit();
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
-	//iluInit();
 	return true;
 }
 
@@ -60,6 +58,6 @@ update_status ModuleTexture::PostUpdate()
 
 bool ModuleTexture::CleanUp()
 {
-	//glDeleteTextures(textures.size(), textures.data());
+	//glDeleteTextures(textureMap.size(), textureMap.data());
 	return true;
 }
