@@ -25,6 +25,8 @@ private:
 private:
 	unsigned int triangle = 0;
 	unsigned int lenna = 0;
+	unsigned int house = 0;
+	unsigned int house_text = 0;
 
 };
 

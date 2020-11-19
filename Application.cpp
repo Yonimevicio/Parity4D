@@ -9,6 +9,7 @@
 #include "ModuleEditor.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleTexture.h"
+#include "ModuleModel.h"
 using namespace std;
 
 Application::Application()
@@ -22,6 +23,7 @@ Application::Application()
 	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(debdraw = new ModuleDebugDraw());
+	modules.push_back(model = new ModuleModel());
 	
 	
 	

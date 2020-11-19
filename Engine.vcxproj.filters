@@ -159,7 +159,8 @@
     <ClCompile Include="ModuleDebugDraw.cpp">
       <Filter>DebugDraw</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModuleMesh.cpp" />
+    <ClCompile Include="ModuleModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -434,7 +435,6 @@
     <ClInclude Include="debug_draw.hpp">
       <Filter>DebugDraw</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h" />
     <ClInclude Include="Assimp\include\assimp\aabb.h">
       <Filter>Assimp</Filter>
     </ClInclude>
@@ -654,6 +654,8 @@
     <ClInclude Include="Assimp\include\assimp\ZipArchiveIOSystem.h">
       <Filter>Assimp</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleMesh.h" />
+    <ClInclude Include="ModuleModel.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">

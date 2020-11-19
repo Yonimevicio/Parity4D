@@ -14,6 +14,7 @@ class ModuleCamera;
 class ModuleEditor;
 class ModuleTexture;
 class ModuleDebugDraw;
+class ModuleModel;
 
 class Application
 {
@@ -36,6 +37,7 @@ public:
 	ModuleEditor* editor = nullptr;
 	ModuleTexture* texture = nullptr;
 	ModuleDebugDraw* debdraw = nullptr;
+	ModuleModel* model = nullptr;
 
 private:
 	float delta_time = 0.0f;

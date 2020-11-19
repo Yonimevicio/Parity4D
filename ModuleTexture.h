@@ -9,7 +9,7 @@ public:
 	~ModuleTexture();
 	
 	bool Init();
-	bool CleanUp();
+	bool CleanUp(unsigned int texture);
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();

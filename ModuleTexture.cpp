@@ -56,8 +56,16 @@ update_status ModuleTexture::PostUpdate()
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleTexture::CleanUp()
+bool ModuleTexture::CleanUp(unsigned int texture)
 {
-	//glDeleteTextures(textureMap.size(), textureMap.data());
+	glDeleteTextures(1, &texture);
+	std::map<std::string,unsigned int>::iterator it;
+	for (it = textureMap.begin(); it != textureMap.end(); it++) 
+	{
+		if (it->second == texture) {
+			textureMap.erase(it);
+			break;
+		}
+	}
 	return true;
 }

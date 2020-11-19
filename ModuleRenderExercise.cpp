@@ -8,7 +8,9 @@
 #include "ModuleDebugDraw.h"
 #include "ModuleCamera.h"
 #include "ModuleTexture.h"
+#include "ModuleModel.h"
 #include "Globals.h"
+
 static void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	const char* tmp_source = "", * tmp_type = "", * tmp_severity = "";
@@ -77,6 +79,8 @@ static unsigned CreateTriangleVBO()
 
 bool ModuleRenderExercise::Start() {
 	lenna = App->texture->LoadTexture("Media/lenna.png");
+	house_text = App->texture->LoadTexture("Media/Baker_house.png");
+	App->model->Load("Media/BakerHouse.fbx");
 	return true;
 }
 
@@ -84,7 +88,7 @@ bool ModuleRenderExercise::Init()
 {
 	LOG("Creating Renderer context");
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4); // desired version
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4); // desired versi on
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
@@ -109,7 +113,7 @@ bool ModuleRenderExercise::Init()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif
 
-	triangle = CreateTriangleVBO();
+	//triangle = CreateTriangleVBO();
 	return true;
 }
 
@@ -120,6 +124,7 @@ void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program) {
 	float4x4 proj = App->camera->GetProjectionMatrix();
 
 	App->debdraw->Draw(view, proj, SCREEN_WIDTH, SCREEN_HEIGHT);
+	App->model->Draw();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glEnableVertexAttribArray(0);
@@ -153,10 +158,18 @@ update_status ModuleRenderExercise::PreUpdate()
 
 	return UPDATE_CONTINUE;
 }
-
+void RenderHouse() {
+	App->model->Draw();
+}
 update_status ModuleRenderExercise::Update()
 {
-	RenderVBO(triangle, App->program->program);
+	float4x4 model = float4x4::identity;
+	float4x4 view = App->camera->GetViewMatrix();
+	float4x4 proj = App->camera->GetProjectionMatrix();
+
+	App->debdraw->Draw(view, proj, SCREEN_WIDTH, SCREEN_HEIGHT);
+	RenderHouse();
+	
 	return UPDATE_CONTINUE;
 }
 
