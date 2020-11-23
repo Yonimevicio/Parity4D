@@ -13,4 +13,12 @@ public:
 	update_status PreUpdate();
 	update_status PostUpdate();
 	bool CleanUp();
+	bool IsMenuHovered() const {
+		return isMenuHovered;
+	};
+
+private:
+	bool isMenuHovered = false;
+	
+
 };

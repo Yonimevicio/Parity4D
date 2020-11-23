@@ -5,7 +5,8 @@
 #include "GL/glew.h"
 #include "MathGeoLib/Math/float3x3.h"
 #include "MathGeoLib/Geometry/Frustum.h"
-
+#include "IMGUI/imgui.h"
+#include "ModuleEditor.h"
 ModuleCamera::ModuleCamera()
 { 
     float4x4 proj = frustum.ProjectionMatrix();
@@ -43,15 +44,16 @@ update_status ModuleCamera::PreUpdate()
 
     float2 mouse_position = App->input->GetMousePosition();
     float2 mouse_motion = App->input->GetMouseMotion();
-    if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
-    {
-        Translate((frustum.Up().Normalized() * mouse_motion.y / 20.0f) + (frustum.WorldRight().Normalized() * -mouse_motion.x / 20.0f));
+    if (!App->editor->IsMenuHovered()) {
+        if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
+        {
+            Translate((frustum.Up().Normalized() * mouse_motion.y / 20.0f) + (frustum.WorldRight().Normalized() * -mouse_motion.x / 20.0f));
+        }
+        else if (App->input->GetKey(SDL_SCANCODE_LALT) && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT))
+        {
+            Translate(frustum.Front().Normalized() * mouse_motion.y / 20.0f);
+        }
     }
-    else if (App->input->GetKey(SDL_SCANCODE_LALT) && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT))
-    {
-        Translate(frustum.Front().Normalized() * mouse_motion.y / 20.0f);
-    }
-
     if (App->input->GetKey(SDL_SCANCODE_Q))
     {
         Translate(vec::unitY * final_movement_speed * delta_time);
@@ -76,7 +78,7 @@ update_status ModuleCamera::PreUpdate()
     {
         Translate(frustum.WorldRight().Normalized() * final_movement_speed * delta_time);
     }
-
+    
     if (App->input->GetKey(SDL_SCANCODE_UP))
     {
         Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), rotation_speed * DEGTORAD * delta_time));
