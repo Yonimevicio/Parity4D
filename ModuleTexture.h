@@ -13,7 +13,7 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
-	unsigned int LoadTexture(const std::string path);
+	unsigned int LoadTexture(const std::string path, const std::string fullpath);
 
 private:
 	std::map<std::string, unsigned int> textureMap;

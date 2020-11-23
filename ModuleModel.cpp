@@ -5,23 +5,23 @@
 #include "assimp/postprocess.h"
 #include "ModuleTexture.h"
 
-void ModuleModel::Load(const char* file_name) {
-	const aiScene* scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);    
+void ModuleModel::Load(const char* file_path) {
+	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene) {        
-		LoadMaterials(scene);
+		LoadMaterials(scene, file_path);
 		LoadMeshes(scene);    
 	}else{        
-		LOG("Error loading %s: %s", file_name, aiGetErrorString());
+		LOG("Error loading %s: %s", file_path, aiGetErrorString());
 	}
 
 }
-void ModuleModel::LoadMaterials(const aiScene* scene) {
+void ModuleModel::LoadMaterials(const aiScene* scene, const char* file_path) {
 	aiString file;    
 	materials.reserve(scene->mNumMaterials);    
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i) { 
 		if (scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS) { 
-			materials.push_back(App->texture->LoadTexture(file.data)); 
-		} 
+			materials.push_back(App->texture->LoadTexture(file.data, file_path)); 
+		}
 	} 
 }
 

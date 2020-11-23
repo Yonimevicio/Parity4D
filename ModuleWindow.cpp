@@ -24,9 +24,11 @@ bool ModuleWindow::Init()
 	}
 	else
 	{
+		SDL_DisplayMode DM;
+		SDL_GetDesktopDisplayMode(0, &DM);
 		//Create window
-		int width = SCREEN_WIDTH;
-		int height = SCREEN_HEIGHT;
+		int width = DM.w;
+		int height = DM.h;
 		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL;
 		flags |= SDL_WINDOW_RESIZABLE;
 		if(FULLSCREEN == true)

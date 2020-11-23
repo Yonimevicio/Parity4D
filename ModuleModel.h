@@ -7,8 +7,8 @@
 class ModuleModel : public Module
 {
 public:
-	void Load(const char* file_name);
-	void LoadMaterials(const aiScene* scene);
+	void Load(const char* file_path);
+	void LoadMaterials(const aiScene* scene, const char* file_path);
 	void LoadMeshes(const aiScene* scene);
 	bool CleanUp();
 	void Draw() const;

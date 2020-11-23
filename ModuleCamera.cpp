@@ -29,8 +29,8 @@ bool ModuleCamera::Init()
 update_status ModuleCamera::PreUpdate()
 {
     float delta_time = App->GetDeltaTime();
-
     float final_movement_speed = movement_speed;
+
     if (App->input->GetKey(SDL_SCANCODE_LSHIFT) || App->input->GetKey(SDL_SCANCODE_RSHIFT))
     {
         final_movement_speed *= 3;
@@ -44,6 +44,7 @@ update_status ModuleCamera::PreUpdate()
 
     float2 mouse_position = App->input->GetMousePosition();
     float2 mouse_motion = App->input->GetMouseMotion();
+
     if (!App->editor->IsMenuHovered()) {
         if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
         {
@@ -54,6 +55,7 @@ update_status ModuleCamera::PreUpdate()
             Translate(frustum.Front().Normalized() * mouse_motion.y / 20.0f);
         }
     }
+
     if (App->input->GetKey(SDL_SCANCODE_Q))
     {
         Translate(vec::unitY * final_movement_speed * delta_time);
@@ -95,8 +97,6 @@ update_status ModuleCamera::PreUpdate()
     {
         Rotate(float3x3::RotateY(-rotation_speed * DEGTORAD * delta_time));
     }
-
-
 
     return UPDATE_CONTINUE;
 }

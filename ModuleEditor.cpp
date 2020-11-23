@@ -7,6 +7,8 @@
 #include "ModuleRenderExercise.h"
 
 bool show_stats = false;
+bool show_properties = false;
+
 ModuleEditor::ModuleEditor()
 {
 }
@@ -48,6 +50,9 @@ void ShowMainMenu() {
 			if (ImGui::MenuItem("Stats", "I")) {
 				show_stats = !show_stats;
 			}
+			if (ImGui::MenuItem("Properties", "P")) {
+				show_properties = !show_properties;
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("About"))
@@ -59,10 +64,41 @@ void ShowMainMenu() {
 }
 void ShowStats() {
 	ImGui::Begin("Stats");
-	ImGui::Button("Hello!");
+	
 	ImGui::End();
 }
-void ShowInspector() {
+void ShowProperties() 
+{
+	ImGui::Begin("Properties");
+
+	if(ImGui::CollapsingHeader("Transformation"))
+	{
+		static ImVec4 size1(100.0f, 100.0f,100.0f, 100.0f);
+		static ImVec4 size2(100.0f, 100.0f, 100.0f, 100.0f);
+		static ImVec4 size3(100.0f, 100.0f, 100.0f, 100.0f);
+
+		ImGui::DragFloat3("position", (float*)&size1, 0.5f, -200.0f, 200.0f, "%.3f");
+		ImGui::DragFloat3("rotate", (float*)&size2, 0.5f, -180.0f, 180.0f, "%.3f");
+		ImGui::DragFloat3("scale", (float*)&size3, 0.5f, -100.0f, 100.0f, "%.3f");
+	}
+
+	if (ImGui::CollapsingHeader("Geometry"))
+	{
+		static ImVec4 size1(100.0f, 100.0f, 100.0f, 100.0f);
+		static ImVec4 size2(100.0f, 100.0f, 100.0f, 100.0f);
+		static ImVec4 size3(100.0f, 100.0f, 100.0f, 100.0f);
+
+		ImGui::DragFloat3("position", (float*)&size1, 0.5f, -200.0f, 200.0f, "%.3f");
+		ImGui::DragFloat3("rotate", (float*)&size2, 0.5f, -180.0f, 180.0f, "%.3f");
+		ImGui::DragFloat3("scale", (float*)&size3, 0.5f, -100.0f, 100.0f, "%.3f");
+	}
+
+	if (ImGui::CollapsingHeader("Texture"))
+	{
+		
+	}
+
+	ImGui::End();
 
 }
 update_status ModuleEditor::Update()
@@ -75,6 +111,8 @@ update_status ModuleEditor::Update()
 	//ImGui::ShowUserGuide();
 	ShowMainMenu();
 	if (show_stats) ShowStats();
+	if (show_properties) ShowProperties();
+
 	ImGui::Render();
 	ImGuiIO& io = ImGui::GetIO();
 	isMenuHovered = io.WantCaptureMouse || io.WantCaptureKeyboard;

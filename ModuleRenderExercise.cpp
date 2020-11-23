@@ -78,9 +78,8 @@ static unsigned CreateTriangleVBO()
 }
 
 bool ModuleRenderExercise::Start() {
-	lenna = App->texture->LoadTexture("Media/lenna.png");
-	house_text = App->texture->LoadTexture("Media/Baker_house.png");
-	App->model->Load("Media/BakerHouse.fbx");
+	//lenna = App->texture->LoadTexture("./Assets/Models/lenna.png");
+	App->model->Load("./Assets/Models/BakerHouse.fbx");
 	return true;
 }
 
@@ -113,7 +112,6 @@ bool ModuleRenderExercise::Init()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif
 
-	//triangle = CreateTriangleVBO();
 	return true;
 }
 
