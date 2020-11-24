@@ -10,24 +10,30 @@ ModuleTexture::~ModuleTexture()
 {
 }
 
-unsigned int ModuleTexture::LoadTexture(const std::string text_name, const std::string fbx_full_path) {
+unsigned int ModuleTexture::LoadTexture(const std::string texture_name, const std::string fbx_full_path) {
 
-	if (textureMap[text_name] != NULL) return textureMap[text_name];
+	if (textureMap[texture_name] != NULL) return textureMap[texture_name];
 
 	unsigned int image_id; 
 	unsigned int texture_id;
 	ilGenImages(1, &image_id);
 	ilBindImage(image_id);
 
-	texture_is_load = ilLoadImage(text_name.c_str());// Work folder
+	texture_is_load = ilLoadImage(texture_name.c_str()); // Work folder
 	if (!texture_is_load) 
 	{
-		std::size_t size = fbx_full_path.find_last_of("/"); //get the path of fbx
-		texture_is_load = ilLoadImage((fbx_full_path.substr(0, size + 1) + text_name).c_str()); // FBX folder
+		std::string name = texture_name;
+		std::size_t size_fbx = fbx_full_path.find_last_of("/"); //get the path of fbx
+		std::size_t size_texture = texture_name.find_last_of("/");
+
+		if (size_texture == std::string::npos) size_texture = 0;
+
+		std::string text_name = texture_name.substr(size_texture, texture_name.size());
+		texture_is_load = ilLoadImage((fbx_full_path.substr(0, size_fbx + 1) + text_name).c_str()); // FBX folder
 
 		if (!texture_is_load)
 		{
-			texture_is_load = ilLoadImage(("./Assets/Textures/" + text_name).c_str()); // Media Folder
+			texture_is_load = ilLoadImage(("./Assets/Textures/" + texture_name).c_str()); // Media Folder
 		}
 	}
 

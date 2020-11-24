@@ -13,7 +13,6 @@ void ModuleModel::Load(const char* file_path) {
 	}else{        
 		LOG("Error loading %s: %s", file_path, aiGetErrorString());
 	}
-
 }
 void ModuleModel::LoadMaterials(const aiScene* scene, const char* file_path) {
 	aiString file;    
