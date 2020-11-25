@@ -18,5 +18,5 @@ enum update_status
 #define SCREEN_HEIGHT 480
 #define FULLSCREEN false
 #define VSYNC true
-#define TITLE "Pairity4d"
+#define TITLE "Pairity6d"
 #define DEGTORAD 0.0174532925

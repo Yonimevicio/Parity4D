@@ -18,9 +18,6 @@ public:
 	};
 
 private:
-	void DragAndDrop();
-
-private:
 	bool isMenuHovered = false;
 	char* dropped_file;
 	SDL_Event event;
