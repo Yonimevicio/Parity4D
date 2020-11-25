@@ -1,10 +1,9 @@
 #pragma once
 #include "Application.h"
 #include "ModuleWindow.h"
-#include "ModuleRender.h"
 #include "ModuleInput.h"
 #include "ModuleProgram.h"
-#include "ModuleRenderExercise.h"
+#include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebugDraw.h"
@@ -19,7 +18,7 @@ Application::Application()
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(texture = new ModuleTexture());
-	modules.push_back(renderer_ex = new ModuleRenderExercise()); // cambiar a render principal
+	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(debdraw = new ModuleDebugDraw());

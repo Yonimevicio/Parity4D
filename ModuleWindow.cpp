@@ -29,8 +29,7 @@ bool ModuleWindow::Init()
 		//Create window
 		int width = DM.w;
 		int height = DM.h;
-		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL;
-		flags |= SDL_WINDOW_RESIZABLE;
+		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 		if(FULLSCREEN == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
@@ -38,7 +37,7 @@ bool ModuleWindow::Init()
 
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-
+		SDL_MaximizeWindow(window);
 		if(window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());

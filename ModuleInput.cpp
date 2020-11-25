@@ -1,10 +1,10 @@
-
 #include "Application.h"
 #include "ModuleInput.h"
-#include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
 #include "SDL/include/SDL.h"
+#include "ModuleRender.h"
+#include "ModuleModel.h"
 
 ModuleInput::ModuleInput()
 {
@@ -80,13 +80,16 @@ update_status ModuleInput::PreUpdate()
 		{
 		case SDL_QUIT:
 			return UPDATE_STOP;
+		case SDL_DROPFILE:
+			App->model->CleanUp();
+			App->model->Load(event.drop.file);
 
 		case SDL_WINDOWEVENT:
 			switch (event.window.event)
 			{
 			case SDL_WINDOWEVENT_RESIZED:
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
-				App->renderer->WindowResized(event.window.data1, event.window.data2);
+				//App->renderer->WindowResized(event.window.data1, event.window.data2);
 				App->camera->WindowResized(event.window.data1, event.window.data2);
 				break;
 			}

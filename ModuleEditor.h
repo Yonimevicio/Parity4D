@@ -1,6 +1,6 @@
 #pragma once
 #include "Module.h"
-
+#include "SDL.h"
 class ModuleEditor : public Module
 {
 
@@ -18,7 +18,11 @@ public:
 	};
 
 private:
+	void DragAndDrop();
+
+private:
 	bool isMenuHovered = false;
-	
+	char* dropped_file;
+	SDL_Event event;
 
 };
