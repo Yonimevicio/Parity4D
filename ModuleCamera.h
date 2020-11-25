@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "MathGeoLib/Geometry/Frustum.h"
+#include "ModuleModel.h"
 
 class ModuleCamera : public Module
 {
@@ -19,10 +20,12 @@ public:
 	void SetAspectRatio(float aspect_ratio);
 	void SetPlaneDistances(float near_plane, float far_plane);
 	void SetPosition(float x, float y, float z);
+	void SetPosition(vec vec3);
 	void SetOrientation(float x, float y, float z);
 	void Translate(vec translation);
 	void Rotate(float3x3 rotationMatrix);
 	void LookAt(float x, float y, float z);
+	void Focus(ModuleModel* model);
 	float4x4 GetProjectionMatrix();
 	float4x4 GetViewMatrix();
 

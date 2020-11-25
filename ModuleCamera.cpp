@@ -7,6 +7,8 @@
 #include "MathGeoLib/Geometry/Frustum.h"
 #include "IMGUI/imgui.h"
 #include "ModuleEditor.h"
+#include "ModuleModel.h"
+
 ModuleCamera::ModuleCamera()
 { 
     float4x4 proj = frustum.ProjectionMatrix();
@@ -80,6 +82,10 @@ update_status ModuleCamera::PreUpdate()
     {
         Translate(frustum.WorldRight().Normalized() * final_movement_speed * delta_time);
     }
+    if (App->input->GetKey(SDL_SCANCODE_F))
+    {
+        Focus(App->model);
+    }
     
     if (App->input->GetKey(SDL_SCANCODE_UP))
     {
@@ -140,6 +146,10 @@ void ModuleCamera::SetPosition(float x, float y, float z)
 {
     frustum.SetPos(vec(x, y, z));
 }
+void ModuleCamera::SetPosition(vec vec3)
+{
+    frustum.SetPos(vec3);
+}
 
 void ModuleCamera::SetOrientation(float x, float y, float z)
 {
@@ -166,6 +176,18 @@ void ModuleCamera::LookAt(float x, float y, float z)
     vec direction = vec(x, y, z) - frustum.Pos();
     direction.Normalize();
     Rotate(float3x3::LookAt(frustum.Front().Normalized(), direction, frustum.Up().Normalized(), float3::unitY));
+}
+void ModuleCamera::Focus(ModuleModel* model)
+{
+    float min_half_angle = Min(frustum.HorizontalFov(), frustum.VerticalFov()) * 0.3f;
+    float relative_distance = model->min_sphere.r / Sin(min_half_angle);
+
+    vec camera_direction = -frustum.Front().Normalized();
+    vec camera_position = (camera_direction * relative_distance) + model->min_sphere.pos;
+    vec model_center = model->min_sphere.pos;
+
+    SetPosition(camera_position);
+    LookAt(model_center.x, model_center.y, model_center.z);
 }
 
 float4x4 ModuleCamera::GetProjectionMatrix()

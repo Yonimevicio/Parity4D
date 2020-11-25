@@ -4,6 +4,7 @@
 #include "assimp/cimport.h"
 #include "assimp/postprocess.h"
 #include "ModuleTexture.h"
+#include "MathGeoLib/Geometry/Sphere.h"
 
 void ModuleModel::Load(const char* file_path) {
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
@@ -26,12 +27,27 @@ void ModuleModel::LoadMaterials(const aiScene* scene, const char* file_path) {
 
 void ModuleModel::LoadMeshes(const aiScene* scene) {
 	aiString file;
+	num_vertices = 0;
+	std::vector<vec> vertices;
+
+	for (int i = 0; i < scene->mNumMeshes; ++i)
+	{
+		num_vertices += scene->mMeshes[i]->mNumVertices;
+	}
+
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
 		ModuleMesh mesh;
 		mesh.Load(scene->mMeshes[i]);
 		meshes.push_back(mesh);
+		
+		for (int j = 0; j < scene->mMeshes[i]->mNumVertices; ++j)
+		{
+			const aiVector3D& ai_vertex = scene->mMeshes[i]->mVertices[j];
+			vertices.push_back(vec(ai_vertex.x, ai_vertex.y, ai_vertex.z));
+		}
 	}
+	min_sphere = Sphere::OptimalEnclosingSphere(vertices.data(), vertices.size());
 }
 bool ModuleModel::CleanUp()
 {
