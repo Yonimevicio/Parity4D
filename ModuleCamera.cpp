@@ -56,54 +56,52 @@ update_status ModuleCamera::PreUpdate()
         {
             Translate(frustum.Front().Normalized() * mouse_motion.y / 20.0f);
         }
-    }
-
-    if (App->input->GetKey(SDL_SCANCODE_Q))
-    {
-        Translate(vec::unitY * final_movement_speed * delta_time);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_E))
-    {
-        Translate(vec::unitY * -final_movement_speed * delta_time);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_W))
-    {
-        Translate(frustum.Front().Normalized() * final_movement_speed * delta_time);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_S))
-    {
-        Translate(frustum.Front().Normalized() * -final_movement_speed * delta_time);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_A))
-    {
-        Translate(frustum.WorldRight().Normalized() * -final_movement_speed * delta_time);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_D))
-    {
-        Translate(frustum.WorldRight().Normalized() * final_movement_speed * delta_time);
-    }
-    if (App->input->GetKey(SDL_SCANCODE_F))
-    {
-        Focus(App->model);
-    }
+        if (App->input->GetKey(SDL_SCANCODE_Q))
+        {
+            Translate(vec::unitY * final_movement_speed * delta_time);
+        }
+        if (App->input->GetKey(SDL_SCANCODE_E))
+        {
+            Translate(vec::unitY * -final_movement_speed * delta_time);
+        }
+        if (App->input->GetKey(SDL_SCANCODE_W))
+        {
+            Translate(frustum.Front().Normalized() * final_movement_speed * delta_time);
+        }
+        if (App->input->GetKey(SDL_SCANCODE_S))
+        {
+            Translate(frustum.Front().Normalized() * -final_movement_speed * delta_time);
+        }
+        if (App->input->GetKey(SDL_SCANCODE_A))
+        {
+            Translate(frustum.WorldRight().Normalized() * -final_movement_speed * delta_time);
+        }
+        if (App->input->GetKey(SDL_SCANCODE_D))
+        {
+            Translate(frustum.WorldRight().Normalized() * final_movement_speed * delta_time);
+        }
+        if (App->input->GetKey(SDL_SCANCODE_F))
+        {
+            Focus(App->model);
+        }
     
-    if (App->input->GetKey(SDL_SCANCODE_UP))
-    {
-        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), rotation_speed * DEGTORAD * delta_time));
+        if (App->input->GetKey(SDL_SCANCODE_UP))
+        {
+            Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), rotation_speed * DEGTORAD * delta_time));
+        }
+        if (App->input->GetKey(SDL_SCANCODE_DOWN))
+        {
+            Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), -rotation_speed * DEGTORAD * delta_time));
+        }
+        if (App->input->GetKey(SDL_SCANCODE_LEFT))
+        {
+            Rotate(float3x3::RotateY(rotation_speed * DEGTORAD * delta_time));
+        }
+        if (App->input->GetKey(SDL_SCANCODE_RIGHT))
+        {
+            Rotate(float3x3::RotateY(-rotation_speed * DEGTORAD * delta_time));
+        }
     }
-    if (App->input->GetKey(SDL_SCANCODE_DOWN))
-    {
-        Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), -rotation_speed * DEGTORAD * delta_time));
-    }
-    if (App->input->GetKey(SDL_SCANCODE_LEFT))
-    {
-        Rotate(float3x3::RotateY(rotation_speed * DEGTORAD * delta_time));
-    }
-    if (App->input->GetKey(SDL_SCANCODE_RIGHT))
-    {
-        Rotate(float3x3::RotateY(-rotation_speed * DEGTORAD * delta_time));
-    }
-
     return UPDATE_CONTINUE;
 }
 

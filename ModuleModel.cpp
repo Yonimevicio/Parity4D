@@ -30,17 +30,12 @@ void ModuleModel::LoadMeshes(const aiScene* scene) {
 	num_vertices = 0;
 	std::vector<vec> vertices;
 
-	for (int i = 0; i < scene->mNumMeshes; ++i)
-	{
-		num_vertices += scene->mMeshes[i]->mNumVertices;
-	}
-
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
 		ModuleMesh mesh;
 		mesh.Load(scene->mMeshes[i]);
 		meshes.push_back(mesh);
-		
+		num_vertices += scene->mMeshes[i]->mNumVertices;
 		for (int j = 0; j < scene->mMeshes[i]->mNumVertices; ++j)
 		{
 			const aiVector3D& ai_vertex = scene->mMeshes[i]->mVertices[j];

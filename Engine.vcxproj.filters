@@ -160,6 +160,9 @@
     <ClCompile Include="ModuleMesh.cpp" />
     <ClCompile Include="ModuleModel.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
+    <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="MicroTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -654,6 +657,9 @@
     <ClInclude Include="ModuleMesh.h" />
     <ClInclude Include="ModuleModel.h" />
     <ClInclude Include="ModuleRender.h" />
+    <ClInclude Include="Console.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="MicroTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">

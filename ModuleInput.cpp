@@ -5,7 +5,7 @@
 #include "SDL/include/SDL.h"
 #include "ModuleRender.h"
 #include "ModuleModel.h"
-
+#include "IMGUI/imgui_impl_sdl.h"
 ModuleInput::ModuleInput()
 {
 	memset(keyboard, KEY_IDLE, sizeof(KeyState) * NUM_KEYS);
@@ -76,6 +76,7 @@ update_status ModuleInput::PreUpdate()
 
 	while (SDL_PollEvent(&event) != 0)
 	{
+		ImGui_ImplSDL2_ProcessEvent(&event);
 		switch (event.type)
 		{
 		case SDL_QUIT:

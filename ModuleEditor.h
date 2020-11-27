@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "SDL.h"
+#include "Console.h"
 class ModuleEditor : public Module
 {
 
@@ -21,5 +22,8 @@ private:
 	bool isMenuHovered = false;
 	char* dropped_file;
 	SDL_Event event;
+	bool* p_open;
 
+public:
+	Console* cmd = nullptr;
 };

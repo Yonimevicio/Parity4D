@@ -145,7 +145,6 @@ void ModuleRender::RenderVBO(unsigned vbo, unsigned program) {
 	// 1 triangle to draw = 3 vertices 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
-
 update_status ModuleRender::PreUpdate()
 {
 	GLsizei screen_width, screen_height;
