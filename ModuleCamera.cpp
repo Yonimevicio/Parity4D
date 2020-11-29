@@ -47,7 +47,7 @@ update_status ModuleCamera::PreUpdate()
     float2 mouse_position = App->input->GetMousePosition();
     float2 mouse_motion = App->input->GetMouseMotion();
 
-    if (!App->editor->IsMenuHovered()) {
+    if (App->editor->ViewportEventsEnabled()) {
         if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
         {
             Translate((frustum.Up().Normalized() * mouse_motion.y / 20.0f) + (frustum.WorldRight().Normalized() * -mouse_motion.x / 20.0f));

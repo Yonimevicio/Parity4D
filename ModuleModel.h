@@ -9,6 +9,8 @@
 class ModuleModel : public Module
 {
 public:
+	ModuleModel();
+	~ModuleModel();
 	void Load(const char* file_path);
 	void LoadMaterials(const aiScene* scene, const char* file_path);
 	void LoadMeshes(const aiScene* scene);

@@ -15,7 +15,7 @@ Console::Console()
     Commands.push_back("CLASSIFY");
     AutoScroll = true;
     ScrollToBottom = false;
-    AddLog("Welcome to Dear ImGui!");
+	AddLog("Welcome to pairity6D console!");
 }
 Console::~Console()
 {
@@ -40,28 +40,17 @@ void Console::AddLog(const char* fmt, ...) IM_FMTARGS(2)
     va_end(args);
     Items.push_back(Strdup(buf));
 }
-void Console::Draw(const char* title, bool* p_open)
+void Console::Draw(const char* title, bool* p_open, int _width, int _height)
 {
-    ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+	if (_width != NULL) width = _width;
+	if (_height != NULL) height = _height;
+
+    ImGui::SetNextWindowSize(ImVec2(width, height), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin(title, p_open))
     {
         ImGui::End();
         return;
     }
-
-    if (ImGui::BeginPopupContextItem())
-    {
-        if (ImGui::MenuItem("Close Console"))
-            *p_open = false;
-        ImGui::EndPopup();
-    }
-
-    ImGui::TextWrapped(
-        "This example implements a console with basic coloring, completion (TAB key) and history (Up/Down keys). A more elaborate "
-        "implementation may want to store entries along with extra data such as timestamp, emitter, etc.");
-    ImGui::TextWrapped("Enter 'HELP' for help.");
-
-    ImGui::Separator();
 
     // Options menu
     if (ImGui::BeginPopup("Options"))
@@ -74,7 +63,7 @@ void Console::Draw(const char* title, bool* p_open)
     if (ImGui::Button("Options"))
         ImGui::OpenPopup("Options");
     ImGui::SameLine();
-    Filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
+    Filter.Draw("Filter", 180);
     ImGui::Separator();
 
     // Reserve enough left-over height for 1 separator + 1 input text
@@ -87,8 +76,6 @@ void Console::Draw(const char* title, bool* p_open)
     }
 
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
-   /* if (copy_to_clipboard)
-        ImGui::LogToClipboard();*/
     for (int i = 0; i < Items.Size; i++)
     {
         const char* item = Items[i];
@@ -107,8 +94,6 @@ void Console::Draw(const char* title, bool* p_open)
         if (has_color)
             ImGui::PopStyleColor();
     }
-   /* if (copy_to_clipboard)
-        ImGui::LogFinish();*/
 
     if (ScrollToBottom || (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
         ImGui::SetScrollHereY(1.0f);

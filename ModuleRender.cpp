@@ -113,38 +113,56 @@ bool ModuleRender::Init()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif
 
+	glGenFramebuffers(1, &fbo);
+
 	return true;
 }
 
-void ModuleRender::RenderVBO(unsigned vbo, unsigned program) {
-
+void ModuleRender::RenderViewport(int width, int height) {
 	float4x4 model = float4x4::identity;
 	float4x4 view = App->camera->GetViewMatrix();
 	float4x4 proj = App->camera->GetProjectionMatrix();
 
-	App->debdraw->Draw(view, proj, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	glDeleteTextures(1, &texture);
+	//generate texture
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//TODO: size of viewport window 
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//fill texture
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+	//rbo
+	glDeleteRenderbuffers(1, &rbo);
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+
+	//TODO: same size as texture
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	glViewport(0, 0, width, height);
+
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	App->model->Draw();
+	App->debdraw->Draw(view, proj, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glEnableVertexAttribArray(0);
-	// size = 3 float per vertex    
-	// stride = 0 is equivalent to stride = sizeof(float)*3
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
-	glUseProgram(program);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		LOG("GL_FRAMEBUFFER ERROR");
+	}
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &view[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &proj[0][0]);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, lenna);
-	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
-	// 1 triangle to draw = 3 vertices 
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
 update_status ModuleRender::PreUpdate()
 {
 	GLsizei screen_width, screen_height;
@@ -157,16 +175,8 @@ update_status ModuleRender::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-
 update_status ModuleRender::Update()
 {
-	float4x4 model = float4x4::identity;
-	float4x4 view = App->camera->GetViewMatrix();
-	float4x4 proj = App->camera->GetProjectionMatrix();
-
-	App->debdraw->Draw(view, proj, SCREEN_WIDTH, SCREEN_HEIGHT);
-	App->model->Draw();
-	
 	return UPDATE_CONTINUE;
 }
 
@@ -178,7 +188,10 @@ update_status ModuleRender::PostUpdate()
 
 bool ModuleRender::CleanUp()
 {
-	return false;
+	if (fbo != 0) glDeleteFramebuffers(1, &fbo);
+	if (rbo != 0) glDeleteRenderbuffers(1, &rbo);
+	if (texture != 0) glDeleteTextures(1, &texture);
+	return true;
 }
 
 

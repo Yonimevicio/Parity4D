@@ -16,6 +16,9 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
+	int GetTexture() { return texture; }
+	void RenderViewport(int width, int height);
+
 public:
 	void* context;
 
@@ -27,6 +30,9 @@ private:
 	unsigned int lenna = 0;
 	unsigned int house = 0;
 	unsigned int house_text = 0;
+	unsigned int fbo;
+	unsigned int texture;
+	unsigned int rbo;
 
 };
 

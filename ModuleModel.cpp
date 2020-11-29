@@ -6,6 +6,16 @@
 #include "ModuleTexture.h"
 #include "MathGeoLib/Geometry/Sphere.h"
 
+void myCallback(const char* msg, char* userData) {
+	if (msg) LOG("Assimp Message: %s", msg);
+}
+
+ModuleModel::ModuleModel(){
+	struct aiLogStream stream;
+	stream.callback = myCallback;
+	aiAttachLogStream(&stream);
+}
+
 void ModuleModel::Load(const char* file_path) {
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene) {        
@@ -24,7 +34,6 @@ void ModuleModel::LoadMaterials(const aiScene* scene, const char* file_path) {
 		}
 	} 
 }
-
 void ModuleModel::LoadMeshes(const aiScene* scene) {
 	aiString file;
 	num_vertices = 0;
@@ -61,7 +70,6 @@ bool ModuleModel::CleanUp()
 	materials.clear();
 	return true;
 }
-
 void ModuleModel::Draw() const
 {
 	for (const ModuleMesh& mesh : meshes)

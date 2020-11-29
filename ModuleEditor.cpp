@@ -5,13 +5,15 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleCamera.h"
+#include "ModuleWindow.h"
 #include <string>
 #include "SDL.h"
 
 bool show_stats = false;
 bool show_properties = false;
 bool show_console = false;
-
+bool show_viewport = false;
 ModuleEditor::ModuleEditor()
 {
 	cmd = new Console();
@@ -27,27 +29,22 @@ bool ModuleEditor::Init()
 	ImGui_ImplOpenGL3_Init();
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable;
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
 	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 	
 	return true;
 }
 
 void ShowMainMenu() {
-	if (ImGui::BeginMainMenuBar())
+	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("Windows"))
 		{
-			if (ImGui::MenuItem("Stats", "I")) {
-				show_stats = !show_stats;
-			}
-			if (ImGui::MenuItem("Properties", "P")) {
-				show_properties = !show_properties;
-			}
-			if (ImGui::MenuItem("Console", "P")) {
-				show_console = !show_console;
-			}
+			if (ImGui::MenuItem("ViewPort", NULL, &show_viewport)) {}
+			if (ImGui::MenuItem("Stats", NULL, &show_stats)) {}
+			if (ImGui::MenuItem("Properties", NULL, &show_properties)) {}
+			if (ImGui::MenuItem("Console", NULL, &show_console)) {}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("About"))
@@ -57,8 +54,21 @@ void ShowMainMenu() {
 			ImGui::Text("The goal of this engine is to double unity3d in everything");
 			ImGui::EndMenu();
 		}
-		ImGui::EndMainMenuBar();
+		ImGui::EndMenuBar();
 	}
+}
+void ShowMainWindow(int width, int height) {
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	if (ImGui::Begin("Main Window", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | 
+		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | 
+		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | 
+		ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBringToFrontOnFocus)) {
+		ImGui::SetWindowSize(ImVec2(width, height));
+		ShowMainMenu();
+		static ImGuiID dockspaceID = ImGui::GetID("HUB_DockSpace");
+		ImGui::DockSpace(dockspaceID, ImVec2(width-10, height-30), ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode);
+	}
+	ImGui::End();
 }
 void ShowStats() {
 	if(ImGui::Begin("Stats")){
@@ -68,6 +78,26 @@ void ShowStats() {
 		}
 		ImGui::End();
 	}
+}
+void ShowViewport() {
+	if (ImGui::Begin("Viewport",0)) { 
+		App->editor->SetViewPortFocus(ImGui::IsWindowFocused());
+		static ImVec2 win_size = ImGui::GetWindowSize();
+		App->renderer->RenderViewport(win_size.x, win_size.y);
+		ImGui::GetWindowDrawList()->AddImage(
+			(void*)(intptr_t)App->renderer->GetTexture(),
+			ImGui::GetCursorScreenPos(),
+			ImVec2(ImGui::GetCursorScreenPos().x + win_size.x, 
+				   ImGui::GetCursorScreenPos().y + win_size.y),
+			ImVec2(0,1), ImVec2(1,0)
+		);
+		ImVec2 win_size2 = ImGui::GetWindowSize();
+		if (win_size2.x != win_size.x || win_size2.y != win_size.y) {
+			App->camera->WindowResized(win_size2.x, win_size2.y);
+			win_size = ImGui::GetWindowSize();
+		}
+	}
+	ImGui::End();
 }
 void ShowProperties() 
 {
@@ -108,25 +138,29 @@ update_status ModuleEditor::PreUpdate()
 {
 	return UPDATE_CONTINUE;
 }
+
 update_status ModuleEditor::Update()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow();
-	//ImGui::ShowUserGuide();
-	ShowMainMenu();
+	int w = App->window->screen_surface->w;
+	int h = App->window->screen_surface->h;
+	ShowMainWindow(w,h);
+
 	if (show_stats) ShowStats();
 	if (show_properties) ShowProperties();
-	if (show_console) cmd->Draw("Terminal", p_open);
-	
+	if (show_console) cmd->Draw("Terminal", 0);
+	if (show_viewport) ShowViewport();
+
 	ImGui::Render();
 	ImGuiIO& io = ImGui::GetIO();
-	isMenuHovered = io.WantCaptureMouse || io.WantCaptureKeyboard;
+	is_menu_hovered = io.WantCaptureMouse || io.WantCaptureKeyboard;
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	return UPDATE_CONTINUE;
 }
+
 update_status ModuleEditor::PostUpdate()
 {
 	ImGui::Render();
