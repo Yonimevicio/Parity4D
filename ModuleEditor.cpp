@@ -80,8 +80,9 @@ void ShowMainMenu() {
 		{
 			ImGui::Text("Pairity6D");
 			ImGui::Text("A powerful game development tool developed in Barcelona");
+			ImGui::Text("The goal of this engine is to fold unity3d in everything.");
 			ImGui::Text("Author: Cristian Ferrer Galan");
-			ImGui::Text("The goal of this engine is to double unity3d in everything");
+			ImGui::Text("Libraries: glew (2.1.0), DevIl, IMGUI, MathGeoLib, SDL, Assimp");
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
