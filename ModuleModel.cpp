@@ -25,9 +25,11 @@ void ModuleModel::Load(const char* file_path) {
 		CleanUp();
 		LoadMaterials(scene, file_path);
 		LoadMeshes(scene);
+		first_texture_source = file_path;
 	}else if (ext == "png" || ext == "PNG" || ext == "jpg" || ext == "JPG" || ext == "dds" || ext == "DDS") {
 		CleanUpOnlyTextures();
 		materials.push_back(App->texture->LoadTexture(file_path, file_path));
+		first_texture_source = file_path;
 	}
 	else {
 		LOG("Error loading %s: %s", file_path, aiGetErrorString());

@@ -7,12 +7,14 @@
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
+#include "ModuleTexture.h"
 #include "SDL.h"
-
+#include "GL/glew.h"
 bool show_stats = false;
 bool show_properties = false;
 bool show_console = false;
 bool show_viewport = false;
+ImVec4 orange = ImVec4(1.00, 0.65, 0.00, 1.0f);
 ModuleEditor::ModuleEditor()
 {
 	cmd = new Console();
@@ -34,7 +36,22 @@ bool ModuleEditor::Init()
 	
 	return true;
 }
-
+std::string GetCaps() {
+	std::string caps = "";
+	if (SDL_Has3DNow) caps += "3D, ";
+	if (SDL_HasAVX) caps += "AVX, ";
+	if (SDL_HasAVX2) caps += "AVX2, ";
+	if (SDL_HasAltiVec) caps += "AltiVec, ";
+	if (SDL_HasMMX) caps += "MMX, ";
+	if (SDL_HasRDTSC) caps += "RDTSC, ";
+	if (SDL_HasSSE) caps += "SSE, ";
+	if (SDL_HasSSE2) caps += "SSE2, ";
+	if (SDL_HasSSE3) caps += "SSE3, ";
+	if (SDL_HasSSE41) caps += "SSE41, ";
+	if (SDL_HasSSE42) caps += "SSE42, ";
+	if (caps.length() > 1) caps = caps.substr(0, caps.length() - 2);
+	return caps;
+}
 void ShowMainMenu() {
 	if (ImGui::BeginMenuBar())
 	{
@@ -50,7 +67,9 @@ void ShowMainMenu() {
 		{
 			ImGui::Text("Pairity6D");
 			ImGui::Text("A powerful game development tool developed in Barcelona");
+			ImGui::Text("Author: Cristian Ferrer Galan");
 			ImGui::Text("The goal of this engine is to double unity3d in everything");
+			ImGui::Text("");
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
@@ -70,13 +89,31 @@ void ShowMainWindow(int width, int height) {
 	ImGui::End();
 }
 void ShowStats() {
-	if(ImGui::Begin("Stats")){
-		char  buff[256] = {};
-		if (ImGui::InputText("pruebas", buff, 256)) {
 
+	if(ImGui::Begin("Stats")){
+		if (ImGui::CollapsingHeader("Hardware"))
+		{
+			SDL_version sdlv; 
+			SDL_GetVersion(&sdlv);
+			ImGui::Text("SDL version: "); ImGui::SameLine();
+			ImGui::TextColored(orange, "%d.%d.%d", sdlv.major, sdlv.minor, sdlv.patch);
+			ImGui::Separator();
+
+			ImGui::Text("CPUs: "); ImGui::SameLine();
+			ImGui::TextColored(orange,"%d (Cache %d kb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+			ImGui::Text("System ram: "); ImGui::SameLine();
+			ImGui::TextColored(orange, "%.1f Gb", SDL_GetSystemRAM() / 1024.0);
+			ImGui::Text("Caps: "); ImGui::SameLine();
+			ImGui::TextColored(orange, "% s", GetCaps().c_str());
+			ImGui::Separator();
+
+			ImGui::Text("GPU: "); ImGui::SameLine();
+			ImGui::TextColored(orange, "%s", glGetString(GL_VENDOR));
+			ImGui::Text("Brand: "); ImGui::SameLine();
+			ImGui::TextColored(orange, "%s", glGetString(GL_RENDERER));
 		}
-		ImGui::End();
 	}
+	ImGui::End();
 }
 void ShowViewport() {
 	if (ImGui::Begin("Viewport",0)) { 
@@ -124,9 +161,11 @@ void ShowProperties()
 		ImGui::DragFloat3("scale", (float*)&size3, 0.5f, -100.0f, 100.0f, "%.3f");
 	}
 
-	if (ImGui::CollapsingHeader("Texture"))
-	{
-		
+	if (ImGui::CollapsingHeader("Texture")) {
+		ImGui::Text("Texture: ");
+		std::string text_src = App->texture->GetFirstTextureSource(); ImGui::SameLine();
+		ImGui::TextColored(orange, "%s", text_src.c_str());
+		ImGui::Image((void*)(intptr_t)App->texture->GetFirstTexture(), ImVec2(256, 256));
 	}
 
 	ImGui::End();
@@ -147,7 +186,7 @@ update_status ModuleEditor::Update()
 	int w = App->window->screen_surface->w;
 	int h = App->window->screen_surface->h;
 	ShowMainWindow(w,h);
-
+	//ImGui::ShowDemoWindow();
 	if (show_stats) ShowStats();
 	if (show_properties) ShowProperties();
 	if (show_console) cmd->Draw("Terminal", 0);

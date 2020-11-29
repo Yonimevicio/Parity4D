@@ -25,7 +25,7 @@ private:
 	std::vector<unsigned int> materials;
 	std::vector<ModuleMesh> meshes;
 	int num_vertices = 0;
-	
+	std::string first_texture_source;
 
 public: 
 	const int GetNumVertices() { return  num_vertices; };

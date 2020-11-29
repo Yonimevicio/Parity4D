@@ -12,7 +12,7 @@ ModuleTexture::~ModuleTexture()
 
 unsigned int ModuleTexture::LoadTexture(const std::string texture_name, const std::string fbx_full_path) {
 
-	if (textureMap[texture_name] != NULL) return textureMap[texture_name];
+	if (textureMap.find(texture_name) != textureMap.end()) return textureMap[texture_name];
 
 	unsigned int image_id; 
 	unsigned int texture_id;
@@ -39,7 +39,6 @@ unsigned int ModuleTexture::LoadTexture(const std::string texture_name, const st
 		}
 	}
 	
-
 	if (texture_is_load) 
 	{
 		LOG("Texture Loaded");
@@ -49,10 +48,13 @@ unsigned int ModuleTexture::LoadTexture(const std::string texture_name, const st
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
+		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), 
+					ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), 
+					0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
 	}
 	else return false;
 
+	textureMap[texture_name] = texture_id;
 	return texture_id;
 }
 bool ModuleTexture::Init()
