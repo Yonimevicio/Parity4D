@@ -14,18 +14,19 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	unsigned int LoadTexture(const std::string path, const std::string fullpath);
+
 private:
 	std::map<std::string, unsigned int> textureMap;
 	bool texture_is_load;
 
 public:
-	const unsigned int GetFirstTexture() {
+	const unsigned int GetFirstTexture() const {
 		return textureMap.begin()->second;
 	}
-	const std::string GetFirstTextureSource() {
+	const std::string GetFirstTextureSource() const{
 		return  textureMap.begin()->first;
 	};
-	const bool TextureIsLoad() {
+	const bool TextureIsLoad() const {
 		return texture_is_load;
 	}
 };

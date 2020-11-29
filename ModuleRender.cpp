@@ -78,9 +78,7 @@ static unsigned CreateTriangleVBO()
 }
 
 bool ModuleRender::Start() {
-	//lenna = App->texture->LoadTexture("./Assets/Models/lenna.png");
 	App->model->Load("./Assets/Models/BakerHouse.fbx");
-	//App->model->Load("./Assets/Models/enemy_low.fbx");
 	return true;
 }
 
@@ -194,12 +192,5 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-
-
-
-static void DestroyVBO(unsigned vbo)
-{
-	glDeleteBuffers(1, &vbo);
-}
 
 

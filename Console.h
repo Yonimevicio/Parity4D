@@ -5,6 +5,7 @@ class Console
 public:
     Console();
     ~Console();
+
     void ClearLog();
     void Draw(const char* title, bool* p_open, int width = 1080 , int height = 300);
     int  Stricmp(const char* s1, const char* s2);

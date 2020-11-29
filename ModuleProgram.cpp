@@ -1,5 +1,14 @@
 #include "ModuleProgram.h"
 #include "GL/glew.h"
+
+ModuleProgram::ModuleProgram()
+{
+}
+
+ModuleProgram::~ModuleProgram()
+{
+}
+
 char* LoadShaderSource(const char* shader_file_name) {
 	char* data = nullptr;
 	FILE* file = nullptr;
@@ -15,7 +24,6 @@ char* LoadShaderSource(const char* shader_file_name) {
 	}
 	return data;
 }
-
 static unsigned CreateShader(unsigned type, const char* file_name)
 {
 	char* source = LoadShaderSource(file_name);
@@ -59,7 +67,6 @@ unsigned CompileShader(unsigned type, const char* source) {
 	}
 	return shader_id;
 }
-
 unsigned CreateProgram(unsigned vtx_shader, unsigned frg_shader) {
 	unsigned program_id = glCreateProgram();
 	glAttachShader(program_id, vtx_shader);
@@ -83,14 +90,6 @@ unsigned CreateProgram(unsigned vtx_shader, unsigned frg_shader) {
 	return program_id;
 }
 
-ModuleProgram::ModuleProgram()
-{
-}
-
-ModuleProgram::~ModuleProgram()
-{
-}
-
 bool ModuleProgram::Init()
 {
 	unsigned vertex_shader = CreateShader(GL_VERTEX_SHADER, "vertexSh.vt");
@@ -99,7 +98,6 @@ bool ModuleProgram::Init()
 	program = CreateProgram(vertex_shader, fragment_shader);
 	return true;
 }
-
 bool ModuleProgram::CleanUp()
 {
 	glDeleteProgram(program);

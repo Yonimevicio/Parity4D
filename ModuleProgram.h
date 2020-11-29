@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+
 class ModuleProgram : public Module
 {
 	public:
@@ -10,6 +11,6 @@ class ModuleProgram : public Module
 		bool CleanUp();
 
 	public:
-		unsigned program = NULL;
+		unsigned program = 0;
 };
 

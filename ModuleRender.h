@@ -23,16 +23,9 @@ public:
 	void* context;
 
 private:
-	void RenderVBO(unsigned vbo, unsigned program);
-
-private:
-	unsigned int triangle = 0;
-	unsigned int lenna = 0;
-	unsigned int house = 0;
-	unsigned int house_text = 0;
-	unsigned int fbo;
-	unsigned int texture;
-	unsigned int rbo;
+	unsigned int fbo = 0;
+	unsigned int texture = 0;
+	unsigned int rbo = 0;
 
 };
 

@@ -9,7 +9,6 @@
 void myCallback(const char* msg, char* userData) {
 	if (msg) LOG("Assimp Message: %s", msg);
 }
-
 ModuleModel::ModuleModel(){
 	struct aiLogStream stream;
 	stream.callback = myCallback;

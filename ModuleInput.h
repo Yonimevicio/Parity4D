@@ -25,10 +25,20 @@ public:
 	~ModuleInput();
 
 	bool Init();
-	update_status Update();
-	update_status PreUpdate();
 	bool CleanUp();
 
+	update_status Update();
+	update_status PreUpdate();
+	
+
+private:
+	KeyState keyboard[NUM_KEYS];
+	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
+	float mouse_wheel_motion = 0;
+	float2 mouse_motion = { 0, 0 };
+	float2 mouse = { 0, 0 };
+
+public:
 	KeyState GetKey(int scancode) const
 	{
 		return keyboard[scancode];
@@ -53,14 +63,4 @@ public:
 	{
 		return mouse;
 	}
-
-
-private:
-	//const Uint8 *keyboard = NULL;
-
-	KeyState keyboard[NUM_KEYS];
-	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
-	float mouse_wheel_motion = 0;
-	float2 mouse_motion = { 0, 0 };
-	float2 mouse = { 0, 0 };
 };
