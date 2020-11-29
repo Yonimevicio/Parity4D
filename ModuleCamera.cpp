@@ -30,24 +30,25 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::PreUpdate()
 {
-    float delta_time = App->GetDeltaTime();
-    float final_movement_speed = movement_speed;
+	if (App->editor->ViewportEventsEnabled()) {
+		float delta_time = App->GetDeltaTime();
+		float final_movement_speed = movement_speed;
 
-    if (App->input->GetKey(SDL_SCANCODE_LSHIFT) || App->input->GetKey(SDL_SCANCODE_RSHIFT))
-    {
-        final_movement_speed *= 3;
-    }
+		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) || App->input->GetKey(SDL_SCANCODE_RSHIFT))
+		{
+			final_movement_speed *= 3;
+		}
 
-    float mouse_wheel_motion = App->input->GetMouseWheelMotion();
-    if (mouse_wheel_motion < -FLT_EPSILON || mouse_wheel_motion > FLT_EPSILON)
-    {
-        Translate(frustum.Front().Normalized() * mouse_wheel_motion * 10 * final_movement_speed * delta_time);
-    }
+		float mouse_wheel_motion = App->input->GetMouseWheelMotion();
+		if (mouse_wheel_motion < -FLT_EPSILON || mouse_wheel_motion > FLT_EPSILON)
+		{
+			Translate(frustum.Front().Normalized() * mouse_wheel_motion * 10 * final_movement_speed * delta_time);
+		}
 
-    float2 mouse_position = App->input->GetMousePosition();
-    float2 mouse_motion = App->input->GetMouseMotion();
+		float2 mouse_position = App->input->GetMousePosition();
+		float2 mouse_motion = App->input->GetMouseMotion();
 
-    if (App->editor->ViewportEventsEnabled()) {
+   
         if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
         {
             Translate((frustum.Up().Normalized() * mouse_motion.y / 20.0f) + (frustum.WorldRight().Normalized() * -mouse_motion.x / 20.0f));
@@ -84,7 +85,6 @@ update_status ModuleCamera::PreUpdate()
         {
             Focus(App->model);
         }
-    
         if (App->input->GetKey(SDL_SCANCODE_UP))
         {
             Rotate(float3x3::RotateAxisAngle(frustum.WorldRight().Normalized(), rotation_speed * DEGTORAD * delta_time));

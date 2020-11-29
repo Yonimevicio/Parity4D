@@ -7,7 +7,6 @@
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
-#include <string>
 #include "SDL.h"
 
 bool show_stats = false;

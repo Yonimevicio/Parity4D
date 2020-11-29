@@ -82,7 +82,7 @@ update_status ModuleInput::PreUpdate()
 		case SDL_QUIT:
 			return UPDATE_STOP;
 		case SDL_DROPFILE:
-			App->model->CleanUp();
+			//App->model->CleanUp();
 			App->model->Load(event.drop.file);
 
 		case SDL_WINDOWEVENT:
@@ -90,7 +90,6 @@ update_status ModuleInput::PreUpdate()
 			{
 			case SDL_WINDOWEVENT_RESIZED:
 			case SDL_WINDOWEVENT_SIZE_CHANGED:
-				//App->renderer->WindowResized(event.window.data1, event.window.data2);
 				App->camera->WindowResized(event.window.data1, event.window.data2);
 				break;
 			}

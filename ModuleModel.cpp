@@ -17,13 +17,22 @@ ModuleModel::ModuleModel(){
 }
 
 void ModuleModel::Load(const char* file_path) {
+
+	std::string filepath = file_path;
+	std::string ext = filepath.substr(filepath.find_last_of(".")+1);
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene) {        
+	if (ext == "fbx" || ext == "FBX"){
+		CleanUp();
 		LoadMaterials(scene, file_path);
-		LoadMeshes(scene);    
-	}else{        
+		LoadMeshes(scene);
+	}else if (ext == "png" || ext == "PNG" || ext == "jpg" || ext == "JPG" || ext == "dds" || ext == "DDS") {
+		CleanUpOnlyTextures();
+		materials.push_back(App->texture->LoadTexture(file_path, file_path));
+	}
+	else {
 		LOG("Error loading %s: %s", file_path, aiGetErrorString());
 	}
+
 }
 void ModuleModel::LoadMaterials(const aiScene* scene, const char* file_path) {
 	aiString file;    
@@ -63,6 +72,14 @@ bool ModuleModel::CleanUp()
 	meshes.clear();
 
 	// clean materials
+	for (unsigned material : materials)
+	{
+		App->texture->CleanUp(material);
+	}
+	materials.clear();
+	return true;
+}
+bool ModuleModel::CleanUpOnlyTextures() {
 	for (unsigned material : materials)
 	{
 		App->texture->CleanUp(material);

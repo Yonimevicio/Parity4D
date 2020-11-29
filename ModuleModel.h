@@ -14,6 +14,7 @@ public:
 	void Load(const char* file_path);
 	void LoadMaterials(const aiScene* scene, const char* file_path);
 	void LoadMeshes(const aiScene* scene);
+	bool CleanUpOnlyTextures();
 	bool CleanUp();
 	void Draw() const;
 
