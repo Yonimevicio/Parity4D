@@ -11,6 +11,7 @@ class ModuleModel : public Module
 public:
 	ModuleModel();
 	~ModuleModel();
+
 	void Load(const char* file_path);
 	void LoadMaterials(const aiScene* scene, const char* file_path);
 	void LoadMeshes(const aiScene* scene);
@@ -23,11 +24,12 @@ public:
 
 private:
 	std::vector<unsigned int> materials;
-	std::vector<ModuleMesh> meshes;
+	
 	int num_vertices = 0;
 	std::string first_texture_source;
 
 public: 
 	const int GetNumVertices() { return  num_vertices; };
+	std::vector<ModuleMesh> meshes;
 };
 

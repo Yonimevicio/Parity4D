@@ -1,4 +1,5 @@
 #include "IMGUI/imgui.h"
+#include "IMGUI/imgui_internal.h"
 #include "IMGUI/imgui_impl_sdl.h"
 #include "IMGUI/imgui_impl_opengl3.h"
 #include "ModuleEditor.h"
@@ -8,12 +9,16 @@
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
 #include "ModuleTexture.h"
+#include "ModuleMesh.h"
 #include "SDL.h"
 #include "GL/glew.h"
+
 bool show_stats = false;
 bool show_properties = false;
 bool show_console = false;
 bool show_viewport = false;
+bool close_window = false;
+
 ImVec4 orange = ImVec4(1.00, 0.65, 0.00, 1.0f);
 ModuleEditor::ModuleEditor()
 {
@@ -55,6 +60,14 @@ std::string GetCaps() {
 void ShowMainMenu() {
 	if (ImGui::BeginMenuBar())
 	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Exit")) {
+				close_window = true;
+			}
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Windows"))
 		{
 			if (ImGui::MenuItem("ViewPort", NULL, &show_viewport)) {}
@@ -69,7 +82,6 @@ void ShowMainMenu() {
 			ImGui::Text("A powerful game development tool developed in Barcelona");
 			ImGui::Text("Author: Cristian Ferrer Galan");
 			ImGui::Text("The goal of this engine is to double unity3d in everything");
-			ImGui::Text("");
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
@@ -127,6 +139,7 @@ void ShowViewport() {
 				   ImGui::GetCursorScreenPos().y + win_size.y),
 			ImVec2(0,1), ImVec2(1,0)
 		);
+
 		ImVec2 win_size2 = ImGui::GetWindowSize();
 		if (win_size2.x != win_size.x || win_size2.y != win_size.y) {
 			App->camera->WindowResized(win_size2.x, win_size2.y);
@@ -135,36 +148,39 @@ void ShowViewport() {
 	}
 	ImGui::End();
 }
-void ShowProperties() 
+void ShowProperties(std::vector<ModuleMesh> &meshes)
 {
 	ImGui::Begin("Properties");
 
 	if(ImGui::CollapsingHeader("Transformation"))
 	{
-		static ImVec4 size1(100.0f, 100.0f,100.0f, 100.0f);
-		static ImVec4 size2(100.0f, 100.0f, 100.0f, 100.0f);
-		static ImVec4 size3(100.0f, 100.0f, 100.0f, 100.0f);
+		static ImVec4 size1(0.0f, 0.0f, 0.0f, 0.0f);
+		static ImVec4 size2(0.0f, 0.0f, 0.0f, 0.0f);
+		static ImVec4 size3(1.0f, 1.0f, 1.0f, 0.0f);
 
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		ImGui::DragFloat3("position", (float*)&size1, 0.5f, -200.0f, 200.0f, "%.3f");
 		ImGui::DragFloat3("rotate", (float*)&size2, 0.5f, -180.0f, 180.0f, "%.3f");
 		ImGui::DragFloat3("scale", (float*)&size3, 0.5f, -100.0f, 100.0f, "%.3f");
+		ImGui::PopItemFlag();
 	}
 
 	if (ImGui::CollapsingHeader("Geometry"))
 	{
-		static ImVec4 size1(100.0f, 100.0f, 100.0f, 100.0f);
-		static ImVec4 size2(100.0f, 100.0f, 100.0f, 100.0f);
-		static ImVec4 size3(100.0f, 100.0f, 100.0f, 100.0f);
-
-		ImGui::DragFloat3("position", (float*)&size1, 0.5f, -200.0f, 200.0f, "%.3f");
-		ImGui::DragFloat3("rotate", (float*)&size2, 0.5f, -180.0f, 180.0f, "%.3f");
-		ImGui::DragFloat3("scale", (float*)&size3, 0.5f, -100.0f, 100.0f, "%.3f");
+		int i = 0;
+		for (std::vector<ModuleMesh>::iterator it = meshes.begin(); it != meshes.end(); ++it) {
+			ImGui::Text("Mesh number: %d", i);
+			ImGui::Text("Number of triangles: %d", it->num_vertices);
+			ImGui::Separator();
+			++i;
+		}
 	}
 
 	if (ImGui::CollapsingHeader("Texture")) {
 		ImGui::Text("Texture: ");
 		std::string text_src = App->texture->GetFirstTextureSource(); ImGui::SameLine();
 		ImGui::TextColored(orange, "%s", text_src.c_str());
+
 		ImGui::Image((void*)(intptr_t)App->texture->GetFirstTexture(), ImVec2(256, 256));
 	}
 
@@ -185,10 +201,10 @@ update_status ModuleEditor::Update()
 	ImGui::NewFrame();
 	int w = App->window->screen_surface->w;
 	int h = App->window->screen_surface->h;
-	ShowMainWindow(w,h);
-	//ImGui::ShowDemoWindow();
+	ShowMainWindow(w, h);
+
 	if (show_stats) ShowStats();
-	if (show_properties) ShowProperties();
+	if (show_properties) ShowProperties(App->model->meshes);
 	if (show_console) cmd->Draw("Terminal", 0);
 	if (show_viewport) ShowViewport();
 
@@ -196,6 +212,7 @@ update_status ModuleEditor::Update()
 	ImGuiIO& io = ImGui::GetIO();
 	is_menu_hovered = io.WantCaptureMouse || io.WantCaptureKeyboard;
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	if (close_window) return UPDATE_STOP;
 	return UPDATE_CONTINUE;
 }
 

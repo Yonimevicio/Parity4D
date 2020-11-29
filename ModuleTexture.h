@@ -20,7 +20,7 @@ private:
 
 public:
 	const unsigned int GetFirstTexture() {
-			return textureMap.begin()->second;
+		return textureMap.begin()->second;
 	}
 	const std::string GetFirstTextureSource() {
 		return  textureMap.begin()->first;

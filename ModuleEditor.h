@@ -27,7 +27,6 @@ private:
 	bool is_viewport_focus = false;
 	char* dropped_file;
 	SDL_Event event;
-	bool* p_open;
 
 public:
 	Console* cmd = nullptr;
